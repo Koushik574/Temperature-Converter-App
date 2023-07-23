@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
 
         val editInput: EditText = findViewById(R.id.editInput)
         val textResult: TextView = findViewById(R.id.textResult)
+        val textResultType: TextView = findViewById(R.id.textResultType)
         val selectType: LinearLayout = findViewById(R.id.selectType)
         val textType: TextView = findViewById(R.id.textType)
 
@@ -40,15 +41,28 @@ class MainActivity : AppCompatActivity() {
                 val inputVal = editInput.text.toString()
                 if (inputVal.isNotEmpty()) {
                     val doubleInput = inputVal.toDouble()
-                    val resultText: String = if (selectedUnit == "Fahrenheit") {
-                        decimalFormat.format((doubleInput - 32) * 5 / 9)
-                    } else {
-                        decimalFormat.format((doubleInput * 9 / 5) + 32)
-                    }
+                    val resultValue = convertTemperature(doubleInput, selectedUnit)
+                    val resultText: String = decimalFormat.format(resultValue)
                     textResult.text = resultText
+
+                    // Update the result type TextView based on the selectedUnit
+                    val resultTypeText = if (selectedUnit == "Fahrenheit") {
+                        getString(R.string.celsius)
+                    } else {
+                        getString(R.string.fahrenheit)
+                    }
+                    textResultType.text = resultTypeText
                 }
             }
         })
+    }
+
+    private fun convertTemperature(input: Double, selectedUnit: String): Double {
+        return if (selectedUnit == "Fahrenheit") {
+            (input - 32) * 5 / 9
+        } else {
+            (input * 9 / 5) + 32
+        }
     }
 
     private fun showAlertDialog(textType: TextView) {
